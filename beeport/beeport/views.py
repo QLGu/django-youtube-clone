@@ -7,6 +7,8 @@ from management.models import *
 
 def ana_sayfa(request):
     kategoriler = Categories.objects.all()
+    videos = Videos.objects.all()
+    events = Events.objects.all()
     return render_to_response('index.html',locals())
 
 def kayit_sayfasi(request):
@@ -14,13 +16,14 @@ def kayit_sayfasi(request):
 
 def kategori(request,kategori_adi):
 	html = kategori_adi
-    	return render_to_response('category.html') 
+        return render_to_response('category.html',locals()) 
 
 def ondemand_izleme_sayfasi(request):
     return render_to_response('watch.html') 
 
-def live_stream_sayfasi(request):
-    return render_to_response('event.html') 
+def live_stream_sayfasi(request,event_id):
+	kategoriler=Categories.objects.all()
+    	return render_to_response('event.html',locals()) 
 
 def live_stream_izleme_sayfasi(request):
     return render_to_response('live.html') 
