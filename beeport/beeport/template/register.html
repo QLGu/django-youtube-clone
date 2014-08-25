@@ -18,7 +18,63 @@
   </head>
   <body>
     <h1>Hello, world!</h1>
+    <div class="container">
+    <div class="row">
+    <div class="span8">
+    <form class="form-horizontal" id="registerHere" method='post' action="/register/">
+        {% csrf_token %}
+    <fieldset>
 
+    <legend>Registration</legend>
+    <div class="control-group">
+    <label class="control-label">Name</label>
+    <div class="controls">
+    <input type="text" class="input-xlarge" id="user_name" name="name" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name">
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label">Surname</label>
+    <div class="controls">
+    <input type="text" class="input-xlarge" id="user_name" name="surname" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name">
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label">Email</label>
+    <div class="controls">
+    <input type="text" class="input-xlarge" id="user_email" name="mail" rel="popover" data-content="What’s your email address?" data-original-title="Email">
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label">Password</label>
+    <div class="controls">
+    <input type="password" class="input-xlarge" id="user_name" name="password" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name">
+    </div>
+    </div>
+
+    <div class="control-group">
+    <label class="control-label">Password Again</label>
+    <div class="controls">
+    <input type="password" class="input-xlarge" id="user_name" name="passagain" rel="popover" data-content="Enter your first and last name." data-original-title="Full Name">
+    </div>
+    </div>
+    .............
+    .............
+
+    <div class="control-group">
+    <label class="control-label"></label>
+    <div class="controls">
+    <button type="submit" class="btn btn-success" >Create My Account</button>
+    </div>
+    </div>
+
+    </fieldset>
+    </form>
+    </div>
+    </div>
+    </div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

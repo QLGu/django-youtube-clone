@@ -15,7 +15,7 @@ class Videos(models.Model):
     name = models.CharField(max_length=255)
     resource = models.IntegerField(max_length=255,choices=[(1, 'Amazon AWS'), (2, 'Google Drive'),(3, 'Vimeo'), (4, 'Youtube')])
     path = models.URLField()
-    tags = models.TextField()
+    tags = models.CharField(max_length=255)
  
 class Users(models.Model): 
     id = models.AutoField(primary_key=True)
@@ -30,10 +30,14 @@ class Users(models.Model):
 
 class Static_Pages(models.Model): 
     id = models.AutoField(primary_key=True)
+    type = models.IntegerField(max_length=255,choices=[(1, 'Help'), (2, 'Contact')])
     header = models.CharField(max_length=255)
     content = models.TextField()
     created_date = models.DateTimeField(auto_now=True)
-    created_user = models.IntegerField()
+    created_user = models.TextField(max_length=255)
+
+    def __unicode__(self):
+        return self.header
 
 class User_Events(models.Model):
 	id=models.AutoField(primary_key=True)
@@ -45,6 +49,7 @@ class Events(models.Model):
 	id=models.AutoField(primary_key=True)
 	event_name=models.CharField(max_length=255)
 	event_desc=models.TextField()
+        event_date=models.DateTimeField()
 	event_price=models.FloatField()
 	event_image=models.ImageField(upload_to="uploads/image/%Y/%m/%d")
 

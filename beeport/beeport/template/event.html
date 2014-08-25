@@ -49,8 +49,19 @@
     </div>
 
 
-    
-    
+    <div class="container">
+      {{ event_id }} <br>
+      {% for e in event %}
+      {{ e.event_name }} <br>
+      {{ e.event_desc }} <br>
+      {{ e.event_price }} <br>
+      <a href="{{ e.event_image }}">event image</a> <br>
+      {% endfor %}
+      <a href="/buy/{{ event_id }}"><input type="button" value="Buy This Event" /></a>
+      {% for v in video_data %}
+      {{ v.name }}
+      {% endfor %}
+    </div>    
 
     <div class="footer">
           <div class="container">
