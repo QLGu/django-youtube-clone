@@ -27,5 +27,7 @@ urlpatterns = patterns('',
     url(r'^help/', views.yardim),
     url(r'^rss/', views.rss),
     url(r'^oneall/', include('django_oneall.urls')),
-    url(r'^(.+)/', views.kategori),
+    url(r'^terms/',views.kosullar),
+    url(r'^privacy/',views.gizlilik),
+    url(r'^category/(.+)/', views.kategori),
 )
