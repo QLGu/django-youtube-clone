@@ -1,0 +1,33 @@
+    {% include "header.html" %}
+    <div class="container theme-showcase" role="main">
+      <div id="videos" class="row list-group">
+        <div class="item  col-xs-4 col-lg-4">
+          
+        </div>
+      </div>
+      <div class="jumbotron">
+        Videos:
+        <div class="container-fluid">
+          {{ status }}<br>
+          {{ user_name }}
+          <ul>
+            {% for video in videos %}
+            <li><a href="watch/{{ video.id }}">{{ video.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="jumbotron">
+        Live Events:
+        <ul>
+          {% for event in events %}
+          <li><a href="event/{{ event.id }}">{{ event.event_name }}</a></li>
+          {% endfor %}
+        </ul>
+        <div>
+
+        </div>
+      </div>
+    </div>
+    {% include "footer.html" %}
+

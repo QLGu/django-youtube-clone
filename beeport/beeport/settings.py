@@ -129,5 +129,8 @@ STATICFILES_DIRS = (
     ),
 )
 
+MEDIA_ROOT = '/Users/mertsaygi/Desktop/Beeport/beeport/uploads'
+MEDIA_URL = 'http://127.0.0.1:8000/uploads/'
+
 CKEDITOR_UPLOAD_PATH = "uploads/"
 CKEDITOR_IMAGE_BACKEND = "pillow"

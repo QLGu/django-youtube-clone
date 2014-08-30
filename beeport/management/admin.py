@@ -46,6 +46,7 @@ class Media:
     	
 
 admin.site.register(Categories)
+admin.site.register(User_Events)
 admin.site.register(Videos,VideoClass)
 admin.site.register(Users, KullaniciClass)
 admin.site.register(Video_Comments,Comments)

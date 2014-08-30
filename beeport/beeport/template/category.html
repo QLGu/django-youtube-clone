@@ -18,13 +18,12 @@
        <div class="well well-sm">
          <div class="row">
            <div class="col-xs-3 col-md-3 text-center">
-             <img src="{{ video.video_image }}" alt="bootsnipp"
+             <img src="/{{ video.video_image }}" alt="bootsnipp"
              class="img-rounded img-responsive" />
            </div>
            <div class="col-xs-9 col-md-9 section-box">
              <h2>
-               {{ video.name }} <a href="/watch/{{ video.id }}"><span class="glyphicon glyphicon-new-window">
-             </span></a>
+               <a href="/watch/{{ video.id }}"><h4><span>{{ video.name }}</span></h4></a>
            </h2>
            <p>{{ video.desc }} </p>
              <hr />
@@ -42,20 +41,31 @@
  </div>
     {% endfor %}
  <div>
-  <ul>
+  
 
-    <li><a href=""></a></li>
-    
-  </ul>
-  <ul class="pagination" style="margin-left:4%;">
-    <li><a href="#">&laquo;</a></li>
-    <li><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">&raquo;</a></li>
-  </ul>
+  {% if is_paginated %}
+    <ul class="pagination">
+      {% if video.has_previous %}
+        <li><a href="?page={{ video.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+      {% endif %}
+
+      {% for num in video.paginator.page_range %}
+        {% ifequal num video.number %}
+          <li class="active"><a href="#">{{ num }}<span class="sr-only">(current)</span></a></li>
+        {% else %}
+          <li><a href="?page={{ num }}">{{ num }}</a></li>
+        {% endifequal %}
+      {% endfor %}
+
+      {% if video.has_next %}
+        <li><a href="?page={{ video.next_page_number }}">&raquo;</a></li>
+      {% else %}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+      {% endif %}
+    <ul>
+  {% endif %}
 </div>
 
 </div>

@@ -30,10 +30,10 @@ class Videos(models.Model):
     resource = models.IntegerField(max_length=255,choices=[(1, 'Amazon AWS'), (2, 'Google Drive'),(3, 'Vimeo'), (4, 'Youtube')])
     path = models.URLField()
     publisher=models.ForeignKey(Users)
-    video_image=models.ImageField(upload_to="uploads/image/%Y/%m/%d")
+    video_image=models.ImageField(upload_to="image/uploads/%Y/%m/%d")
     desc=models.TextField()
     tags = models.CharField(max_length=255)
-    likes = models.IntegerField(default=0)
+    #likes = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name
@@ -68,7 +68,7 @@ class Events(models.Model):
 	event_desc=models.TextField()
         event_date=models.DateTimeField()
 	event_price=models.FloatField()
-	event_image=models.ImageField(upload_to="uploads/image/%Y/%m/%d")
+	event_image=models.ImageField(upload_to="image/uploads/%Y/%m/%d")
 
 	def __unicode__(self): 
 	    return self.event_name 
