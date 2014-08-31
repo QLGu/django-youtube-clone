@@ -97,4 +97,16 @@ class Meta:
 	def __unicode__(self): 
 	    return self.event_name 
 
-    
+class Messages(models.Model):
+     id=models.AutoField(primary_key=True)
+     reciever_id=models.ForeignKey(Users, related_name='message_recievers')
+     sender_id=models.ForeignKey(Users, related_name='message_senders')
+     sent_date=models.DateTimeField(auto_now=True)
+     message=models.TextField()
+     status=models.IntegerField(choices=[(1,'Okundu'),(2,'İletildi')])
+
+class Password_Token_Cache(models.Model):
+    id=models.AutoField(primary_key=True)
+    user_id=models.ForeignKey(Users)
+    pass_token=models.TextField(max_length=255)
+          

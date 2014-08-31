@@ -1,0 +1,27 @@
+    <div class="footer">
+          <div class="container">
+            <p class="text-muted" align="right">
+              <a href="/help/">Yardım</a>&nbsp;|
+              <a href="/contact/">İletişim</a>&nbsp;|
+              <a href="/api/">Mobile API</a>&nbsp;|
+              <a href="/rss/">RSS</a>&nbsp;|
+              &copy; 2014 Beeport &middot; <a href="/privacy/">Gizlilik</a> &middot; <a href="/terms/">Kullanım Koşulları</a>
+            </p>
+          </div>
+    </div>
+
+      {% include "login_popup.html" %}
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/template/static/js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+     <script type="text/javascript">
+     $(document).ready(function(){
+      $('a[href="#login"]').click(function(){
+       $("#login").modal('show');
+     });
+    });
+     </script>
+    <script src="/template/static/js/bootstrap.min.js"></script>
+  </body>
+</html>

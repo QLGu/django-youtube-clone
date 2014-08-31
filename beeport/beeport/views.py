@@ -5,6 +5,9 @@ from django.shortcuts import render_to_response
 from django.middleware import csrf
 from management.models import *
 from forms import RegisterForm
+import uuid
+from django.core.mail import send_mail
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pafy
@@ -293,6 +296,11 @@ def sifremi_unuttum(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
+        email = request.POST['email']
+        subject = "Beetube.tv Şifre Sıfırlama"
+        message = "http://127.0.0.1:8000/reset_pass?token="+uuid.uuid4().hex
+        recipients = [request.POST['email']]
+        send_mail(subject, message, settings.EMAIL_HOST_USER,recipients, fail_silently=False)
         return render_to_response('unuttum.html',locals())
     else:
         return render_to_response('unuttum.html',locals())
@@ -300,7 +308,11 @@ def sifremi_unuttum(request):
 def sifre_sifirla(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
+    token=request.GET['token']
     if request.POST:
+        email=request.POST['email']
+        pass1=request.POST['password1']
+        pass2=request.POST['password2']
         return render_to_response('reset.html',locals())
     else:
         return render_to_response('reset.html',locals())

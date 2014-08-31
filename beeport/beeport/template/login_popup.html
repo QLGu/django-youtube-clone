@@ -15,15 +15,15 @@
                var s = document.getElementsByTagName('script')[0];
                s.parentNode.insertBefore(oa, s)
               </script>
-              <div id="oa_social_login_container"></div>
               <script type="text/javascript">
                var _oneall = _oneall || [];
                _oneall.push(['social_login', 'set_providers', ['facebook', 'google', 'twitter']]);
                _oneall.push(['social_login', 'set_custom_css_uri', 'https://oneallcdn.com/css/api/socialize/themes/buildin/signin/large-v1.css']);
                _oneall.push(['social_login', 'set_grid_sizes', [1,]]);
                _oneall.push(['social_login', 'do_render_ui', 'oa_social_login_container']);
-               _oneall.push(['social_login', 'set_callback_uri', 'http://127.0.0.1:8000{% url "oneall_auth" %}']);
+               _oneall.push(['social_login', 'set_callback_uri', '{% url "oneall_auth" %}']);
               </script>
+              <div id="oa_social_login_container"></div>
               </div>
               <div class="pane-right col col-xs-6">
                 <form role="form" method="post" action="." >
