@@ -7,6 +7,7 @@ from management.models import *
 from forms import RegisterForm
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import pafy
 
 def loginUser(request):
     u_email = request.POST.get("email", "")
@@ -34,7 +35,11 @@ def ana_sayfa(request):
     videos = Videos.objects.all()
     events = Events.objects.all()
     if request.POST:
-        loginUser(request)
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('index.html',locals())
     else:
         return render_to_response('index.html',locals())
@@ -67,6 +72,11 @@ def kategori(request,kategori_adi):
     except EmptyPage:
         videos=paginator.page(paginator.num_pages)
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('category.html',locals())
     else:
         return render_to_response('category.html',locals())
@@ -75,12 +85,31 @@ def ondemand_izleme_sayfasi(request,video_id):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler=Categories.objects.all()
     video_data = Videos.objects.filter(id=video_id)
-    video_path=video_data[0].path
+    video_resource=video_data[0].resource
+    if video_resource == 1:
+        video_path=video_data[0].path
+    elif video_resource == 2:
+        video_path=video_data[0].path
+    elif video_resource == 3:
+        video_path=video_data[0].path
+    elif video_resource == 4:
+        video = pafy.new(video_data[0].path)
+        best = video.getbest(preftype="mp4")
+        video_path=best.url
+    else:
+        video_path=video_data[0].path
     video_name=video_data[0].name
     video_publisher=video_data[0].publisher
+    video_like_count=User_Liked_Videos.objects.filter(video_id=video_id).count()
+    video_comment_count=Video_Comments.objects.filter(video_id=video_id).count()
     video_comments = Video_Comments.objects.filter(video_id=video_id)
-    related_videos = Videos.objects.filter(category=1)
+    related_videos = Videos.objects.filter(category=video_data[0].category)
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('watch.html',locals())
     else:
         return render_to_response('watch.html',locals())
@@ -91,6 +120,11 @@ def live_stream_sayfasi(request,event_id):
     video_data = Videos.objects.filter(id=2)
     event = Events.objects.filter(id=event_id)
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('event.html',locals())
     else:
         return render_to_response('event.html',locals())
@@ -99,6 +133,11 @@ def live_stream_izleme_sayfasi(request,event_id):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('live.html',locals())
     else:
         return render_to_response('live.html',locals())
@@ -111,6 +150,11 @@ def live_stream_satin_alma_sayfasi(request,event_id):
         return HttpResponseRedirect('/live/'+event_id)
     else:
         if request.POST:
+            action_name = request.POST.get("action", "")
+            if action_name == "login":
+                loginUser(request)
+            else:
+                status="wait an action"
             return render_to_response('buy.html',locals())
         else:
             return render_to_response('buy.html',locals())
@@ -119,7 +163,11 @@ def arama(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
-        loginUser(request)
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('search.html',locals())
     else:
         query = request.GET['srch-term']
@@ -179,6 +227,11 @@ def iletisim(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('contact.html',locals())
     else:
         return render_to_response('contact.html',locals())
@@ -187,6 +240,11 @@ def yardim(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('help.html',locals())
     else:
         return render_to_response('help.html',locals())
@@ -203,17 +261,46 @@ def gizlilik(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('gizlilik.html',locals())
     else:
         return render_to_response('gizlilik.html',locals())
 
 def oturum_kapat(request):
+    del request.session['user_id']
+    del request.session['user_name']
+    request.session.flush()
     return HttpResponseRedirect('/')
 
 def kosullar(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
+        action_name = request.POST.get("action", "")
+        if action_name == "login":
+            loginUser(request)
+        else:
+            status="wait an action"
         return render_to_response('kosullar.html',locals())
     else:
         return render_to_response('kosullar.html',locals())
+
+def sifremi_unuttum(request):
+    csrf_token = get_or_create_csrf_token(request)
+    kategoriler = Categories.objects.all()
+    if request.POST:
+        return render_to_response('unuttum.html',locals())
+    else:
+        return render_to_response('unuttum.html',locals())
+
+def sifre_sifirla(request):
+    csrf_token = get_or_create_csrf_token(request)
+    kategoriler = Categories.objects.all()
+    if request.POST:
+        return render_to_response('reset.html',locals())
+    else:
+        return render_to_response('reset.html',locals())

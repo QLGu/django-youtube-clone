@@ -13,6 +13,7 @@ class VideoClass(admin.ModelAdmin):
 
   list_display = ('resource', 'category', 'name')
 
+
 class KullaniciClass(admin.ModelAdmin):
     verbose_name_plural = 'Kullanıcılar'
     can_delete = False
@@ -46,6 +47,7 @@ class Media:
     	
 
 admin.site.register(Categories)
+admin.site.register(User_Liked_Videos)
 admin.site.register(User_Events)
 admin.site.register(Videos,VideoClass)
 admin.site.register(Users, KullaniciClass)

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.db import models
 
 # Create your models here.
@@ -15,6 +16,9 @@ class Users(models.Model):
     def __unicode__(self):
         return self.profile_name
 
+    class Meta:
+        verbose_name_plural="Kullanıcılar"
+
 class Categories(models.Model): 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
@@ -22,6 +26,9 @@ class Categories(models.Model):
   
     def __unicode__(self):
     	return self.name
+
+    class Meta:
+        verbose_name_plural="Kategoriler"
 
 class Videos(models.Model): 
     id = models.AutoField(primary_key=True)
@@ -33,10 +40,12 @@ class Videos(models.Model):
     video_image=models.ImageField(upload_to="image/uploads/%Y/%m/%d")
     desc=models.TextField()
     tags = models.CharField(max_length=255)
-    #likes = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural="Videolar"
 
 class Video_Comments(models.Model):
     id=models.AutoField(primary_key=True)
@@ -44,6 +53,15 @@ class Video_Comments(models.Model):
     video_id=models.ForeignKey(Videos)
     comment=models.TextField()
     comment_date=models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural="Yorumlar"
+
+class User_Liked_Videos(models.Model):
+    id=models.AutoField(primary_key=True)
+    video_id=models.ForeignKey(Videos)
+    user_id=models.ForeignKey(Users)
+    liked_date=models.DateTimeField(auto_now=True)
 
 class Static_Pages(models.Model): 
     id = models.AutoField(primary_key=True)
@@ -55,6 +73,9 @@ class Static_Pages(models.Model):
 
     def __unicode__(self):
         return self.header
+
+    class Meta:
+        verbose_name_plural="Statik Sayfalar"
 
 class User_Events(models.Model):
 	id=models.AutoField(primary_key=True)
@@ -70,5 +91,10 @@ class Events(models.Model):
 	event_price=models.FloatField()
 	event_image=models.ImageField(upload_to="image/uploads/%Y/%m/%d")
 
+class Meta:
+        verbose_name_plural="Etkinlikler"
+
 	def __unicode__(self): 
 	    return self.event_name 
+
+    

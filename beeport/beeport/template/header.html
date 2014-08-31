@@ -72,25 +72,7 @@
               </div>
             </form>
           </div>
-        <ul class="nav navbar-nav navbar-right">
-          {% if request.session.user_id != null %}
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Hoşgeldiniz, {{ request.session.user_name }}<span class="caret"></span></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="/manager/">Video Yöneticisi</a></li>
-              <li><a href="/lists/">Listelerim</a></li>
-              <li><a href="/profile/">Profilim</a></li>
-              <li><a href="/messages/">Mesajlarım</a></li>
-              <li><a href="/subscriptions/">Kanallarım</a></li>
-              <li><a href="/settings/">Ayarlar</a></li>
-              <li><a href="/sign_out/">Oturumu Kapat</a></li>
-            </ul>
-          </li>
-          {% else %}
-          <li><a href="/register/">Kayıt Ol</a></li>
-          <li><a href="#login">Oturum Aç</a></li>
-          {% endif %}
-        </ul>
+        {% include "user_menu.html" %}
       </div><!--/.nav-collapse -->
     </div>
   </div>

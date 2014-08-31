@@ -11,7 +11,7 @@
          <!-- Preview Image -->
          <video id="vid1" class="video-js vjs-default-skin" autoplay controls preload="auto"
          poster="http://video-js.zencoder.com/oceans-clip.png"
-         data-setup='{}'
+         data-setup=''
          width='750'
          height='400'
          >
@@ -39,12 +39,12 @@
                    </a>
                    <div class="media-body">
                      <h4 class="media-heading">{{ video_name }}</h4>
-                     <p><span class="label label-info">888 Likes</span> <span class="label label-warning">150 Comments</span></p>
+                     <p><span class="label label-info">{{ video_like_count }} Likes</span> <span class="label label-warning">{{ video_comment_count }} Comments</span></p>
                      <p><b>Gönderen: {{ video_publisher }}</b></p>
                      <p>
-                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Message</a>
-                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-heart"></span> Favorite</a>
-                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-ban-circle"></span> Unfollow</a>
+                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Mesaj Gönder</a>
+                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-circle"></span> Takip Et</a>
+                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-heart"></span> Videoyu Beğen</a>
                      </p>
                    </div>
                  </div>
@@ -55,7 +55,8 @@
          <hr>
 
          <!-- Posted Comments -->
-
+         <h4>Yorumlar:</h4>
+         {% if video_comment_count > 0 %}
          {% for comment in video_comments %}
          <!-- Comment -->
          <div class="media">
@@ -70,8 +71,21 @@
            </div>
          </div>
          {% endfor %}
+         {% else %}
+         <p>Bu videoya daha önce hiç yorum yapılmadı.İlk yorumlayan sen ol!</p>
+         {% endif %}
            <hr>
 
+           <script type="text/javascript">
+           function controlSession(var controlVariable){
+              if(){
+                return true;
+              }else{
+                return false;
+              }
+           }
+           </script>
+           {{ mert }}
            <!-- Comments Form -->
            <div class="well">
              <h4>Leave a Comment:</h4>
@@ -80,7 +94,7 @@
                <div class="form-group">
                  <textarea class="form-control" rows="3"></textarea>
                </div>
-               <button type="submit" class="btn btn-primary">Submit</button>
+               <button type="submit" class="btn btn-primary" onsubmit="controlSession({% if request.session.user_id != null %}1{% else %}0{% endif %});">Submit</button>
              </form>
            </div>
 

@@ -1,3 +1,89 @@
     {% include "header.html" %}
-
+    <div class="container">
+    	<h3 align="left">Videolarım<span>(2)</span></h3>
+    	<div align="right">
+            <form class="navbar-form" role="search" method="get" action="/search/">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Videolarımda Ara" name="srch-term" id="srch-term">
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+              </div>
+            </form>
+            <a href="#">Kare Kare Görünüm</a>
+            <a href="#">Liste Görünümü</a>
+    	</div>
+    	<table align="center" width="100%">
+    		<tr>
+    			<th><input type="checkbox"></th>
+    			<th>
+    				<!-- Small button group -->
+    				<div class="btn-group">
+    					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+    						Eylemler <span class="caret"></span>
+    					</button>
+    					<ul class="dropdown-menu" role="menu">
+    						<li><a href="#">Listeye Ekle</a></li>
+    						<li><a href="#">Etiket Ekle</a></li>
+    						<li><a href="#">Kategori Değiştir</a></li>
+    						<li><a href="#">Sil</a></li>
+    						<li><a href="#">Herkese Açık Yap</a></li>
+    						<li><a href="#">Linke Sahip Herkese Açık Yap</a></li>
+    						<li><a href="#">Bana Özel Yap</a></li>
+    					</ul>
+    				</div>
+    			</th>
+    			<th>2 Video Bulundu</th>
+    			<th>Yüklenme Tarihi</th>
+    			<th>Video Süresi</th>
+    			<th>İzlenme Sayısı</th>
+    			<th>
+    				<span class="glyphicon glyphicon-globe"></span>
+    				<span class="glyphicon glyphicon-lock"></span>
+    				<span class="glyphicon glyphicon-link"></span>
+    			</th>
+    		</tr>
+    		<tr>
+    			<td><input type="checkbox"></td>
+    			<td><img src="http://www.yapimalzemeleriburada.com/images/products/00/45/23/4523_buyuk.jpg" width="100" height="100" />
+    			</td>
+    			<td>Tüpçü Fikret - Gazeteci</td>
+    			<td>31/08/2014 20:48</td>
+    			<td>00:00</td>
+    			<td>0</td>
+    			<td><span class="glyphicon glyphicon-globe"></span></td>
+    			<td>
+    				<div class="btn-group">
+    					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+    						Düzenle <span class="caret"></span>
+    					</button>
+    					<ul class="dropdown-menu" role="menu">
+    						<li>Sil</li>
+    					</ul>
+    				</div>
+    			</td>
+    		</tr>
+    		<tr>
+    			<td><input type="checkbox"></td>
+    			<td><img src="http://www.yapimalzemeleriburada.com/images/products/00/45/23/4523_buyuk.jpg" width="100" height="100" />
+    			</td>
+    			<td>Ahmet Kural En İyi 10 Tipleme (Bipsiz)</td>
+    			<td>31/08/2014 20:48</td>
+    			<td>00:00</td>
+    			<td>0</td>
+    			<td><span class="glyphicon glyphicon-globe"></span></td>
+    			<td>
+    				<div class="btn-group">
+    					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+    						Düzenle <span class="caret"></span>
+    					</button>
+    					<ul class="dropdown-menu" role="menu">
+    						<li>Sil</li>
+    					</ul>
+    				</div>
+    			</td>
+    		</tr>
+    	</table>
+    	<a href="#" align="center">Daha Fazla Göster</a>
+    </div>
     {% include "footer.html" %}

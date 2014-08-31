@@ -1,16 +1,4 @@
-    <div class="footer">
-          <div class="container">
-            <p class="text-muted" align="right">
-              <a href="/help/">Yardım</a>&nbsp;|
-              <a href="/contact/">İletişim</a>&nbsp;|
-              <a href="/api/">Mobile API</a>&nbsp;|
-              <a href="/rss/">RSS</a>&nbsp;|
-              &copy; 2014 Beeport &middot; <a href="/privacy/">Gizlilik</a> &middot; <a href="/terms/">Kullanım Koşulları</a>
-            </p>
-          </div>
-    </div>
-
-      <div id="login" class="modal fade" data-backdrop="static">
+<div id="login" class="modal fade" data-backdrop="static">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -30,11 +18,11 @@
               <div id="oa_social_login_container"></div>
               <script type="text/javascript">
                var _oneall = _oneall || [];
-               _oneall.push(['social_login', 'set_callback_uri', 'http://127.0.0.1:8000{% url "oneall_auth" %}']);
                _oneall.push(['social_login', 'set_providers', ['facebook', 'google', 'twitter']]);
                _oneall.push(['social_login', 'set_custom_css_uri', 'https://oneallcdn.com/css/api/socialize/themes/buildin/signin/large-v1.css']);
                _oneall.push(['social_login', 'set_grid_sizes', [1,]]);
                _oneall.push(['social_login', 'do_render_ui', 'oa_social_login_container']);
+               _oneall.push(['social_login', 'set_callback_uri', 'http://127.0.0.1:8000{% url "oneall_auth" %}']);
               </script>
               </div>
               <div class="pane-right col col-xs-6">
@@ -53,6 +41,7 @@
             </div>
               </div>             
             <div class="modal-footer">
+              <a href="/forgot_pass/">Şifremi Unuttum</a>
               <button type="button" class="btn btn-default" data-dismiss="modal">Kapat</button>
               <button type="submit" class="btn btn-primary">Oturum Aç</button>
             </div>
@@ -60,17 +49,3 @@
         </div>
       </div>
     </div>
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="/template/static/js/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-     <script type="text/javascript">
-     $(document).ready(function(){
-      $('a[href="#login"]').click(function(){
-       $("#login").modal('show');
-     });
-    });
-     </script>
-    <script src="/template/static/js/bootstrap.min.js"></script>
-  </body>
-</html>
