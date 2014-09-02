@@ -19,6 +19,11 @@ class KullaniciClass(admin.ModelAdmin):
     can_delete = False
     list_display = ('name', 'surname', 'email')
 
+class MesajClass(admin.ModelAdmin):
+    verbose_name_plural = 'Mesajlar'
+    can_delete = False
+    list_display = ('status','reciever_id', 'sender_id', 'sent_date')
+
 class Comments(admin.ModelAdmin):
   verbose_name_plural = 'Video Yorumları'
   list_display=('commenter_id','video_id','comment','comment_date')
@@ -49,6 +54,9 @@ class Media:
 admin.site.register(Categories)
 admin.site.register(User_Liked_Videos)
 admin.site.register(User_Events)
+admin.site.register(User_Playlist)
+admin.site.register(Playlist_Videos)
+admin.site.register(Messages,MesajClass)
 admin.site.register(Videos,VideoClass)
 admin.site.register(Users, KullaniciClass)
 admin.site.register(Video_Comments,Comments)

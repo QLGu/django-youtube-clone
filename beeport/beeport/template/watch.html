@@ -43,8 +43,38 @@
                      <p><b>Gönderen: {{ video_publisher }}</b></p>
                      <p>
                        <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-comment"></span> Mesaj Gönder</a>
-                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-circle"></span> Takip Et</a>
-                       <a href="#" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-heart"></span> Videoyu Beğen</a>
+                       <input type="button" id="follow" name="{{ video_id }}" value="Takip Et" />
+                       <input type="button" id="like" name="{{ video_id }}" value="Videoyu Beğen" />
+                       <script>
+                       $('#like').click(function(){
+                             $.ajax({
+                                      type: "POST",
+                                      url: "{% url "like" %}",
+                                      data: {'slug': $(this).attr('name'), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                                      dataType: "text",
+                                      success: function(response) {
+                                             //alert('You liked this')
+                                       },
+                                       error: function(rs, e) {
+                                            //alert(rs.responseText);
+                                       }
+                                 }); 
+                           })
+                        $('#follow').click(function(){
+                              $.ajax({
+                                       type: "POST",
+                                       url: "{% url "follow" %}",
+                                       data: {'slug': $(this).attr('name'), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                                       dataType: "text",
+                                       success: function(response) {
+                                              alert('You liked this')
+                                        },
+                                        error: function(rs, e) {
+                                               alert(rs.responseText);
+                                        }
+                                  }); 
+                            })
+                       </script>
                      </p>
                    </div>
                  </div>
@@ -77,13 +107,29 @@
            <!-- Comments Form -->
            <div class="well">
              <h4>Leave a Comment:</h4>
-             <form role="form" action="/watch/{{ video_id }}/" method="post">
+             <form role="form">
               {% csrf_token %}
                <div class="form-group">
-                 <textarea class="form-control" rows="3"></textarea>
+                 <textarea class="form-control" id="textcom" rows="3"></textarea>
                </div>
-                <input type="hidden" name="action" value="comment">
-               <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" id="comment" name="{{ video_id }}" class="btn btn-primary">Submit</button>
+                <script>
+                $('#comment').click(function(){
+                      $.ajax({
+                               type: "POST",
+                               url: "{% url "comment" %}",
+                               data: {'slug': $(this).attr('name'),'text': $('#textcom').val(), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                               dataType: "text",
+                               success: function(response) {
+                                      alert('You commented this')
+                                },
+                                error: function(rs, e) {
+                                      //alert(rs.responseText);
+                                      $("#login").modal('show');
+                                }
+                          }); 
+                    })
+                </script>
              </form>
            </div>
 

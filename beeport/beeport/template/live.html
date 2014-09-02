@@ -1,3 +1,20 @@
     {% include "header.html" %}
-    
+    <div class="container">
+    	<div align="center">
+    		<video id="vid1" class="video-js vjs-default-skin" autoplay controls preload="auto"
+    		poster="http://video-js.zencoder.com/oceans-clip.png"
+    		data-setup=''
+    		width='750'
+    		height='400'
+    		>
+    		<source src="/template/static/AHMET KAYA - İçimde Ölen Biri Var.mp4" type='video/mp4'>
+    			<p>Video Playback Not Supported</p>
+    		</video>
+    		{{ event.event_name }}<br/>
+    		{{ event.event_desc }}
+    	</div>
+    	<div align="center">
+
+    	</div>
+    </div>
     {% include "footer.html" %}

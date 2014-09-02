@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-
+from datetime import datetime
+from django.utils.text import slugify
 # Create your models here.
 class Users(models.Model): 
     id = models.AutoField(primary_key=True)
@@ -10,8 +11,11 @@ class Users(models.Model):
     password = models.CharField(max_length=255)
     profile_name = models.CharField(max_length=255)
     image_url = models.URLField()
+    #gender = models.IntegerField(max_length=255,choices=[(1,'Erkek'),(2,'Kadın')])
+    about_me=models.TextField(blank=True,null=True,default="")
+    birthdate=models.DateField(blank=True,null=True,default=datetime.now())
     social_id = models.CharField(max_length=255)
-    social_type = models.IntegerField()
+    social_type = models.IntegerField(default=0,choices=[(0,'No Social Media'),(1,'Facebook'),(2,'Twitter'),(3,'Google')])
 
     def __unicode__(self):
         return self.profile_name
@@ -22,10 +26,16 @@ class Users(models.Model):
 class Categories(models.Model): 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    url_name=models.CharField(max_length=255)
+    url_name=models.SlugField(editable=False)
   
     def __unicode__(self):
     	return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.url_name = slugify(self.name)
+
+        super(Categories, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural="Kategoriler"
@@ -37,8 +47,10 @@ class Videos(models.Model):
     resource = models.IntegerField(max_length=255,choices=[(1, 'Amazon AWS'), (2, 'Google Drive'),(3, 'Vimeo'), (4, 'Youtube')])
     path = models.URLField()
     publisher=models.ForeignKey(Users)
-    video_image=models.ImageField(upload_to="image/uploads/%Y/%m/%d")
+    sharing_permissions=models.IntegerField(max_length=255,choices=[(1,'Herkese Açık'),(2,'Video Linkine Sahip Olan Herkese Açık'),(3,'Sadece Bana Açık')])
+    video_image=models.ImageField(upload_to="image/%Y/%m/%d")
     desc=models.TextField()
+    upload_date=models.DateTimeField(auto_now=True,default=datetime.now())
     tags = models.CharField(max_length=255)
 
     def __unicode__(self):
@@ -89,7 +101,7 @@ class Events(models.Model):
 	event_desc=models.TextField()
         event_date=models.DateTimeField()
 	event_price=models.FloatField()
-	event_image=models.ImageField(upload_to="image/uploads/%Y/%m/%d")
+	event_image=models.ImageField(upload_to="image/%Y/%m/%d")
 
 class Meta:
         verbose_name_plural="Etkinlikler"
@@ -109,4 +121,18 @@ class Password_Token_Cache(models.Model):
     id=models.AutoField(primary_key=True)
     user_id=models.ForeignKey(Users)
     pass_token=models.TextField(max_length=255)
-          
+
+class User_Playlist(models.Model):
+    id=models.AutoField(primary_key=True)
+    user_id=models.ForeignKey(Users)
+    playlist_name=models.CharField(max_length=255)
+
+class Playlist_Videos(models.Model):
+    id=models.AutoField(primary_key=True)
+    video_id=models.ForeignKey(Videos)
+    playlist_id=models.ForeignKey(User_Playlist)
+
+class User_Subscriptions(models.Model):
+    id=models.AutoField(primary_key=True)
+    liker_id=models.ForeignKey(Users, related_name='user_liker')
+    liked_id=models.ForeignKey(Users, related_name='user_liked')

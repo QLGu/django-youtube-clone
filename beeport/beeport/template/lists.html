@@ -1,7 +1,28 @@
     {% include "header.html" %}
     <div class="container">
-    	<h3>Listelerim(1)</h3><br>
-    	<img src="/template/static/images/list.png"><br>
+    	<h3>Listelerim({{ my_lists.count }})</h3><br>
+        {% include "new_playlist.html" %}
+        <a href="#new">Yeni Playlist Oluştur</a>
+    	 <script type="text/javascript">
+         $(document).ready(function(){
+          $('a[href="#new"]').click(function(){
+           $("#new").modal('show');
+         });
+        });
+         </script><br>
+    	<table width="100%">
+            {% for list in my_lists %}
+    		<tr>
+                <td>{{ list.playlist_name }}(0)</td>
+                <td>
+                    <a href="">Oynat</a>
+                    <a href="">Düzenle</a>
+                    <a href="">Paylaş</a>
+                    <a href="">Sil</a>
+                </td>
+            </tr>
+            {% endfor %}
+    	</table><br>
     	<img src="/template/static/images/list2.png"><br>
     </div>
     {% include "footer.html" %}

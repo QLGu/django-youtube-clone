@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 	Google driveyi cdn olarak kullanabilmek için;
 	1) Google Drivede bir klasör oluşturun. Örnek: public_cdn
@@ -7,28 +8,16 @@
 from apiclient import errors
 # ...
 
-def retrieve_all_files(service):
-  """Retrieve a list of File resources.
+class Get_Drive:
 
-  Args:
-    service: Drive API service instance.
-  Returns:
-    List of File resources.
-  """
-  result = []
-  page_token = None
-  while True:
-    try:
-      param = {}
-      if page_token:
-        param['pageToken'] = page_token
-      files = service.files().list(**param).execute()
+  def retrieve_all_files():
+    print "Saygı"
 
-      result.extend(files['items'])
-      page_token = files.get('nextPageToken')
-      if not page_token:
-        break
-    except errors.HttpError, error:
-      print 'An error occurred: %s' % error
-      break
-  return result
+  def getVideos():
+    print "Mert"
+
+
+  if __name__ == '__main__':
+    getVideos()
+    retrieve_all_files()
+

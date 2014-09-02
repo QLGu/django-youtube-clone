@@ -1,7 +1,8 @@
     {% include "header.html" %}
     <div class="container">
-    	<h3 align="left">Videolarım<span>(2)</span></h3>
+    	<h3 align="left">Videolarım<span>({{ video_count }})</span></h3>
     	<div align="right">
+            <a href="/add_video/">Video Ekle</a>
             <form class="navbar-form" role="search" method="get" action="/search/">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Videolarımda Ara" name="srch-term" id="srch-term">
@@ -33,7 +34,7 @@
     					</ul>
     				</div>
     			</th>
-    			<th>2 Video Bulundu</th>
+    			<th>{{ video_count }} Video Bulundu</th>
     			<th>Yüklenme Tarihi</th>
     			<th>Video Süresi</th>
     			<th>İzlenme Sayısı</th>
@@ -43,15 +44,25 @@
     				<span class="glyphicon glyphicon-link"></span>
     			</th>
     		</tr>
+            {% for video in my_videos %}
     		<tr>
     			<td><input type="checkbox"></td>
-    			<td><img src="http://www.yapimalzemeleriburada.com/images/products/00/45/23/4523_buyuk.jpg" width="100" height="100" />
+    			<td><img src="/{{ video.video_image }}" width="100" height="100" />
     			</td>
-    			<td>Tüpçü Fikret - Gazeteci</td>
-    			<td>31/08/2014 20:48</td>
+    			<td>{{ video.name }}</td>
+    			<td>{{ video.upload_date }}</td>
     			<td>00:00</td>
     			<td>0</td>
-    			<td><span class="glyphicon glyphicon-globe"></span></td>
+    			<td>
+                    {% if video.sharing_permissions == 1 %}
+                    <span class="glyphicon glyphicon-globe"></span>
+                    {% elif video.sharing_permissions == 2 %}
+                    <span class="glyphicon glyphicon-link"></span>
+                    {% elif video.sharing_permissions == 3 %}
+                    <span class="glyphicon glyphicon-lock"></span>
+                    {% else %}
+                    {% endif %}
+                </td>
     			<td>
     				<div class="btn-group">
     					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
@@ -63,26 +74,7 @@
     				</div>
     			</td>
     		</tr>
-    		<tr>
-    			<td><input type="checkbox"></td>
-    			<td><img src="http://www.yapimalzemeleriburada.com/images/products/00/45/23/4523_buyuk.jpg" width="100" height="100" />
-    			</td>
-    			<td>Ahmet Kural En İyi 10 Tipleme (Bipsiz)</td>
-    			<td>31/08/2014 20:48</td>
-    			<td>00:00</td>
-    			<td>0</td>
-    			<td><span class="glyphicon glyphicon-globe"></span></td>
-    			<td>
-    				<div class="btn-group">
-    					<button class="btn btn-default btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
-    						Düzenle <span class="caret"></span>
-    					</button>
-    					<ul class="dropdown-menu" role="menu">
-    						<li>Sil</li>
-    					</ul>
-    				</div>
-    			</td>
-    		</tr>
+            {% endfor %}
     	</table>
     	<a href="#" align="center">Daha Fazla Göster</a>
     </div>

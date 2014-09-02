@@ -1,30 +1,90 @@
     {% include "header.html" %}
     <div class="container">
-     
-    <!-------->
-    <div id="content">
-        <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-            <li class="active"><a href="#gelen" data-toggle="tab">Gelen Kutusu</a></li>
-            <li><a href="#giden" data-toggle="tab">Giden Kutusu</a></li>
-            <li><a href="#">Yeni Mesaj Gönder</a></li>
-        </ul>
-        <div id="my-tab-content" class="tab-content">
-            <div class="tab-pane active" id="gelen">
-                <h1>Gelen Kutusu (0)</h1>
-                Sil,Okundu İşaretle,Okunmadı İşaretle
-            </div>
-            <div class="tab-pane" id="giden">
-                <h1>Giden Kutusu (0)</h1>
-                Giden Kutusunda mesajınız bulunmamaktadır
+
+        <!-------->
+        <div id="content">
+            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="active"><a href="#gelen" data-toggle="tab">Gelen Kutusu</a></li>
+                <li><a href="#giden" data-toggle="tab">Giden Kutusu</a></li>
+                <li><a href="#new" data-toggle="tab">Yeni Mesaj Gönder</a></li>
+            </ul>
+            <div id="my-tab-content" class="tab-content">
+                <div class="tab-pane active" id="gelen">
+                    <h1>Gelen Kutusu ({{ recieved_messages.count }})</h1>
+                    Sil,Okundu İşaretle,Okunmadı İşaretle
+                    {% if recieved_messages.count > 0 %}
+                    <table width="100%">
+                        <tr>
+                            <th></th>
+                            <th>Gönderen</th>
+                            <th>Mesaj</th>
+                            <th>Tarih</th>
+                            <th></th>
+                        </tr>
+                        {% for rcv in recieved_messages %}
+                         <tr>
+                            <td></td>
+                            <td>{{ rcv.sender_id }}</td>
+                            <td>{{ rcv.message }}</td>
+                            <td>{{ rcv.sent_date }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}    
+                        {% else %}
+                        <p>Gelen Kutusunda mesajınız bulunmamaktadır</p>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="tab-pane" id="giden">
+                    <h1>Giden Kutusu ({{ sent_messages.count }})</h1>
+                    sil
+                    {% if sent_messages.count > 0 %}
+                    <table width="100%">
+                        <tr>
+                            <th></th>
+                            <th>Gönderen</th>
+                            <th>Mesaj</th>
+                            <th>Tarih</th>
+                            <th></th>
+                        </tr>
+                        {% for snt in sent_messages %}
+                         <tr>
+                            <td></td>
+                            <td>{{ snt.sender_id }}</td>
+                            <td>{{ snt.message }}</td>
+                            <td>{{ snt.sent_date }}</td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}      
+                        {% else %}
+                        <p>Giden Kutusunda mesajınız bulunmamaktadır</p>
+                        {% endif %}
+                    </table>
+                </div>
+                <div class="tab-pane" id="new">
+                    <h1>Yeni Mesaj</h1>
+                    <form action="/messages/" method="post" class="form-horizontal">
+                        {% csrf_token %}
+                         <div class="form-group">
+                          <label for="name">Kime:</label>
+                          <input type="text" class="form-control" id="title" name="kime">
+                        </div>
+                         <div class="form-group">
+                          <label for="name">Mesaj:</label>
+                          <textarea class="form-control" name="mesaj" id="textcom" rows="3"></textarea>
+                          <input type="hidden" class="form-control" id="title" name="action" value="message">
+                        </div>
+                        <input type="submit" value="Gönder" class="btn btn-success" />
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-     
-     
-    <script type="text/javascript">
+
+
+        <script type="text/javascript">
         jQuery(document).ready(function ($) {
             $('#tabs').tab();
         });
-    </script>    
+        </script>    
     </div> <!-- container -->
     {% include "footer.html" %}

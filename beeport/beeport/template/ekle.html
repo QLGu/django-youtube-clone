@@ -1,0 +1,21 @@
+    {% include "header.html" %}
+    <div class="container">
+    	<div id="content">
+    	    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+    	        <li class="active"><a href="#from" data-toggle="tab">Bilgisayarımdan Yükle</a></li>
+    	        <li><a href="#to" data-toggle="tab">İnternetteki Bir Konumdan Yükle</a></li>
+    	    </ul>
+    	    <div id="my-tab-content" class="tab-content">
+    	        <div class="tab-pane active" id="from">
+    	        	<form id="uploadVideo" method="post" action="/add_video/">
+
+    	        		<input type="submit" value="Yükle" />
+    	        	</form>
+    	        </div>
+    	        <div class="tab-pane active" id="to">
+
+    	        </div>
+    	    </div>
+    </div>
+    {% include "footer.html" %}
+    

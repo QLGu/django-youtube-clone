@@ -1,5 +1,17 @@
     {% include "header.html" %}
     <div class="container">
-    	Kullanıcının takip ettiği kullanıcıları ve de kullanıcıyı takip eden kullanıcıları tab halinde listeler.
+    	<div id="content">
+    	    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+    	        <li class="active"><a href="#from" data-toggle="tab">Aboneliklerim</a></li>
+    	        <li><a href="#to" data-toggle="tab">Abonelerim</a></li>
+    	    </ul>
+    	    <div id="my-tab-content" class="tab-content">
+    	        <div class="tab-pane active" id="from">
+
+    	        </div>
+    	        <div class="tab-pane active" id="to">
+
+    	        </div>
+    	    </div>
     </div>
     {% include "footer.html" %}
