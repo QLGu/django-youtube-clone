@@ -6,7 +6,7 @@ from django.middleware import csrf
 from management.models import *
 from forms import *
 from django.http import HttpResponse
-from django.utils import simplejson
+import json
 import uuid
 from payment import *
 from django.core.mail import send_mail
@@ -17,8 +17,6 @@ import pafy
 
 def makePayment(request):
     token = uuid.uuid4().hex
-    p = Payment()
-    test_obj = p.postToService()
     obj = User_Events(user_id=1,event_id=2,user_token=token)
     obj.save()
 
@@ -168,7 +166,8 @@ def live_stream_satin_alma_sayfasi(request,event_id):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     user_bought = User_Events.objects.filter(user_id=1,event_id=event_id)
-    makePayment(request)
+    p = Payment()
+    test_obj = p.postToService()
     if len(user_bought) >0:
         return HttpResponseRedirect('/live/'+event_id)
     else:
@@ -220,10 +219,15 @@ def listelerim(request):
 def bilgilerimi_guncelle(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
+    user = Users.objects.get(pk=request.session['user_id'])
     if request.POST:
-        return render_to_response('profile.html',locals())
+        form = ProfileForm(request.POST,instance=user)
+        if form.is_valid():
+            form.save()
+        return render_to_response('profile.html',locals()) 
     else:
-        return render_to_response('profile.html',locals())
+        form = ProfileForm(instance=user)
+    return render_to_response('profile.html',locals())
 
 def mesajlarim(request):
     csrf_token = get_or_create_csrf_token(request)
@@ -437,6 +441,28 @@ def video_ekle(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
-        return render_to_response('ekle.html',locals())
+        form = AddVideoForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+        return render_to_response('ekle.html',locals()) 
     else:
+        form = AddVideoForm()
         return render_to_response('ekle.html',locals())
+
+def video_duzenle(request,video_id):
+    csrf_token = get_or_create_csrf_token(request)
+    kategoriler = Categories.objects.all()
+    video = Videos.objects.get(pk=video_id)
+    if request.POST:
+        form = AddVideoForm(request.POST,instance=video)
+        if form.is_valid():
+            form.save()
+        return render_to_response('ekle.html',locals()) 
+    else:
+        form = AddVideoForm(instance=video)
+        return render_to_response('ekle.html',locals())
+
+def video_sil(request,video_id):
+    obj = Videos.objects.get(id=video_id)
+    obj.delete()
+    return HttpResponseRedirect('/manager/')

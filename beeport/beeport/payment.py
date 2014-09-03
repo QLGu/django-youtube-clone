@@ -30,5 +30,12 @@ class Payment:
 		params['CLIENT_TIME'] = 'long-lived-token'
 
 		params = urllib.urlencode(params)
-		f = urllib.urlopen("https://secure.payu.com.tr/order/alu/v2", params)	
+		f = urllib.urlopen("https://secure.payu.com.tr/order/alu/v2", params)
+		print f.read()	
 		return f.read()
+
+		'''
+	if __name__ =="__main__":
+		print "Mert"
+		postToService()
+		'''
