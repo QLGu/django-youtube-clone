@@ -3,6 +3,7 @@ from django.template import Context, loader
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.middleware import csrf
+from django.contrib.auth import *
 from management.models import *
 from forms import *
 from django.http import HttpResponse
@@ -23,20 +24,24 @@ def makePayment(request):
 def sendMessage(request):
     kime = request.POST.get("kime", "")
     mesaj = request.POST.get("mesaj", "")
-    user= Users.objects.get(profile_name=kime)
-    sender= Users.objects.get(pk=1)
+    user= User.objects.get(profile_name=kime)
+    sender= User.objects.get(pk=1)
     obj = Messages(sender_id=sender, reciever_id=user, message=mesaj,status=2)
     obj.save()
 
 def loginUser(request):
-    u_email = request.POST.get("email", "")
+    u_username = request.POST.get("username", "")
     u_password = request.POST.get("password", "")
-    user_data = Users.objects.filter(email=u_email, password=u_password)
-    if user_data.count() > 0:
-        request.session.set_test_cookie()
-        request.session['user_id'] =user_data[0].id
-        request.session['user_name'] =user_data[0].profile_name
-        status="ok"
+    user = authenticate(username=u_username, password=u_password)
+    if user:
+        if user.is_active:
+            login(request, user)
+            current_user = request.user
+            request.session['user_id'] =current_user.id
+            request.session['user_name'] =u_username
+            status="ok"
+        else:
+            return HttpResponse("Your Rango account is disabled.")
     else:
         status = "Kullanici adi ya da sifre yanlıs"
         
@@ -66,13 +71,24 @@ def ana_sayfa(request):
 def kayit_sayfasi(request):
     kategoriler=Categories.objects.all()
     csrf_token = get_or_create_csrf_token(request)
+    registered=False
     if request.POST:
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            user.set_password(user.password)
+            user.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            registered=True
+        else:
+            print user_form.errors, profile_form.errors
         return render_to_response('register.html',locals()) 
     else:
-        form = RegisterForm()
+        user_form = UserForm()
+        profile_form = UserProfileForm()
         return render_to_response('register.html',locals()) 
     
 def kategori(request,kategori_adi):
@@ -219,7 +235,7 @@ def listelerim(request):
 def bilgilerimi_guncelle(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
-    user = Users.objects.get(pk=request.session['user_id'])
+    user = User.objects.get(pk=request.session['user_id'])
     if request.POST:
         form = ProfileForm(request.POST,instance=user)
         if form.is_valid():
@@ -297,7 +313,7 @@ def rss(request):
 def kullanici_sil(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
-    obj = Users.objects.get(id=request.session['user_id'])
+    obj = User.objects.get(id=request.session['user_id'])
     obj.delete()
     request.session.flush()
     if request.POST:
@@ -335,9 +351,10 @@ def gizlilik(request):
         return render_to_response('gizlilik.html',locals())
 
 def oturum_kapat(request):
-    del request.session['user_id']
-    del request.session['user_name']
+    logout(request)
     request.session.flush()
+    #del request.session['user_id']
+    #del request.session['user_name']    
     return HttpResponseRedirect('/')
 
 def kosullar(request):
@@ -384,7 +401,7 @@ def like(request):
         video_id = request.POST.get('slug', None)
         video_obj = Videos.objects.get(pk=video_id)
         user_id=request.session['user_id']
-        user_obj=Users.objects.get(pk=user_id)
+        user_obj=User.objects.get(pk=user_id)
         like_obj = User_Liked_Videos.objects.filter(video_id=video_obj, user_id=user_obj)
         if like_obj.count() == 0:
             obj = User_Liked_Videos(video_id=video_obj, user_id=user_obj)
@@ -400,7 +417,7 @@ def comment(request):
         comment = request.POST.get('text', None)
         video_obj = Videos.objects.get(pk=video_id)
         user_id=request.session['user_id']
-        user_obj=Users.objects.get(pk=user_id)
+        user_obj=User.objects.get(pk=user_id)
         #com_obj = Video_Comments.objects.filter(video_id=video_obj, commenter_id=user_obj)
         #if com_obj.count() == 0:
         obj = Video_Comments(video_id=video_obj, commenter_id=user_obj,comment=comment)
@@ -414,7 +431,7 @@ def new_list(request):
     if request.method == 'POST':
         list_name = request.POST.get('name', None)
         user_id=request.session['user_id']
-        user_obj=Users.objects.get(pk=user_id)
+        user_obj=User.objects.get(pk=user_id)
         obj = User_Playlist(user_id=user_obj, playlist_name=list_name)
         obj.save()
 
@@ -427,8 +444,8 @@ def follow(request):
         video_id = request.POST.get('slug', None)
         video_obj = Videos.objects.get(pk=video_id)
         user_id=request.session['user_id']
-        liker_obj=Users.objects.get(pk=user_id)
-        liked_obj=Users.objects.get(pk=video_obj.publisher)
+        liker_obj=User.objects.get(pk=user_id)
+        liked_obj=User.objects.get(pk=video_obj.publisher)
         fol_obj = User_Subscriptions.objects.filter(liker_id=liker_obj, liked_id=liked_obj)
         if fol_obj.count() == 0:
             obj = User_Subscriptions(liker_id=liker_obj, liked_id=liked_obj)

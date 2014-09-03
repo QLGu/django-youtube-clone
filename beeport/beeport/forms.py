@@ -1,26 +1,19 @@
 # -*- coding: utf-8 -*-
 from django import forms
 from management.models import *
+from django.contrib.auth.models import User
 
-class RegisterForm(forms.ModelForm):
-	name = forms.CharField(label='Adiniz')
-	surname = forms.CharField(label='Soyadiniz')
-	email = forms.CharField(label='E-Mail',widget=forms.EmailInput())
-	password = forms.CharField(label='Sifreniz',widget=forms.PasswordInput())
-	passagain = forms.CharField(label='Sifrenizi Tekrar Giriniz',widget=forms.PasswordInput())
-	
-	class Meta:
-		model=Users
-		exclude=('image_url','about_me','birthdate','image_url','profile_name','social_id','social_type')
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
 
-	'''
-	def __init__(self, user, *args, **kwargs):
-	    super(RegisterForm, self).__init__(*args, **kwargs)
-	    self.fields['profile_name'].widget = forms.HiddenInput()
-	    self.fields['image_url'].widget = forms.HiddenInput()
-	    self.fields['social_id'].widget = forms.HiddenInput()
-		social_type = forms.IntegerField(label='Sosyal Medya Tipi',required=False,widget=forms.HiddenInput())
-	'''
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password')
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('gender', 'birthdate')
 
 class ProfileForm(forms.ModelForm):
 	CHOICES = ((1,'Erkek'),(2,'Kadın'),)
@@ -31,7 +24,7 @@ class ProfileForm(forms.ModelForm):
 	about_me=forms.CharField(label='Hakkimda',widget=forms.Textarea())
 
 	class Meta:
-		model = Users
+		model = User
 		exclude=('image_url','profile_name','social_id','social_type','email','password')
 
 class AddVideoForm(forms.ModelForm):

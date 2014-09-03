@@ -1,28 +1,29 @@
     {% include "header.html" %}
     <div class="container">
-    	<form action="/register/" method="post" class="form-horizontal">
-    		<fieldset>
-    			<div id="legend">
-    				<legend class="">Kayıt Ol</legend>
-    			</div>
-    			{% csrf_token %}
-    			{% for field in form.visible_fields %}
-    			<div class="control-group">
-    				<label class="control-label"  for="username">{{ field.label_tag }}</label>
-    				<div class="controls">
-    					{{ field }}
-    					<p class="help-block">{{ field.errors }}</p>
-    				</div>
-    			</div>
-    			{% endfor %}
-
-    			<div class="control-group">
-    				<!-- Button -->
-    				<div class="controls">
-    					<input type="submit" value="Kaydı Tamamla" class="btn btn-success" />
-    				</div>
-    			</div>
-    		</fieldset>
-    	</form>
-</div>
-{% include "footer.html" %}
+    	{% if registered %}
+       <a href="/">Return to the homepage.</a><br />
+       {% else %}
+       <form id="user_form" method="post" action="/register/">
+           {% csrf_token %}
+           <table>
+               {% for field in user_form %}
+               <tr>
+                   <td>{{ field.label_tag }}</td>
+                   <td>{{ field }}</td>
+                   <td>{{ field.errors }}</td>
+               </tr>
+               {% endfor %}
+               {% for field in profile_form %}
+               <tr>
+                   <td>{{ field.label_tag }}</td>
+                   <td>{{ field }}</td>
+                   <td>{{ field.errors }}</td>
+               </tr>
+               {% endfor %}
+           </table>
+           <!-- Provide a button to click to submit the form. -->
+           <input type="submit" name="submit" value="Register" />
+       </form>
+       {% endif %}
+   </div>
+   {% include "footer.html" %}

@@ -14,11 +14,6 @@ class VideoClass(admin.ModelAdmin):
   list_display = ('resource', 'category', 'name')
 
 
-class KullaniciClass(admin.ModelAdmin):
-    verbose_name_plural = 'Kullanıcılar'
-    can_delete = False
-    list_display = ('name', 'surname', 'email')
-
 class MesajClass(admin.ModelAdmin):
     verbose_name_plural = 'Mesajlar'
     can_delete = False
@@ -54,11 +49,12 @@ class Media:
 admin.site.register(Categories)
 admin.site.register(User_Liked_Videos)
 admin.site.register(User_Events)
+admin.site.register(Event_Stream_Informations)
 admin.site.register(User_Playlist)
 admin.site.register(Playlist_Videos)
 admin.site.register(Messages,MesajClass)
 admin.site.register(Videos,VideoClass)
-admin.site.register(Users, KullaniciClass)
+admin.site.register(UserProfile)
 admin.site.register(Video_Comments,Comments)
 admin.site.register(Static_Pages,StaticClass)
 admin.site.register(Events,EtkinlikClass)
