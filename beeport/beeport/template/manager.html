@@ -11,13 +11,13 @@
     						Eylemler <span class="caret"></span>
     					</button>
     					<ul class="dropdown-menu" role="menu">
-    						<li><a href="/manager/add-list/">Listeye Ekle</a></li>
-    						<li><a href="/manager/add-tag/">Etiket Ekle</a></li>
-    						<li><a href="/manager/change-cat/">Kategori Değiştir</a></li>
-    						<li><a href="/manager/delete/">Sil</a></li>
-    						<li><a href="/manager/make-public/">Herkese Açık Yap</a></li>
-    						<li><a href="/manager/make-owner-public/">Linke Sahip Herkese Açık Yap</a></li>
-    						<li><a href="/manager/make-private/">Bana Özel Yap</a></li>
+    						<li><a href="#" id="addlist">Listeye Ekle</a></li>
+    						<li><a href="#" id="addtag">Etiket Ekle</a></li>
+    						<li><a href="#" id="changecat">Kategori Değiştir</a></li>
+    						<li><a href="#" id="delmulti">Sil</a></li>
+    						<li><a href="#" id="multipublic">Herkese Açık Yap</a></li>
+    						<li><a href="#" id="multiurl">Linke Sahip Herkese Açık Yap</a></li>
+    						<li><a href="#" id="multiprivate">Bana Özel Yap</a></li>
     					</ul>
     				</div>
     			</th>
@@ -68,4 +68,5 @@
             {% endfor %}
     	</table>
     </div>
+    <script src="/template/static/js/manager.js"></script>
     {% include "footer.html" %}

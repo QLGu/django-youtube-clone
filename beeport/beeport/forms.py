@@ -16,16 +16,9 @@ class UserProfileForm(forms.ModelForm):
         fields = ('gender', 'birthdate')
 
 class ProfileForm(forms.ModelForm):
-	CHOICES = ((1,'Erkek'),(2,'Kadın'),)
-	name=forms.CharField(label='Adiniz')
-	surname=forms.CharField(label='Soyadiniz')
-	birthdate=forms.DateField(label='Doğum Tarihiniz')
-	gender=forms.IntegerField(label='Cinsiyet',widget=forms.Select(choices=CHOICES))
-	about_me=forms.CharField(label='Hakkimda',widget=forms.Textarea())
-
 	class Meta:
-		model = User
-		exclude=('image_url','profile_name','social_id','social_type','email','password')
+		model = UserProfile
+		exclude=('user',)
 
 class AddVideoForm(forms.ModelForm):
 	CHOICES= (

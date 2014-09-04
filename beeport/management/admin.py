@@ -26,7 +26,7 @@ class Comments(admin.ModelAdmin):
 class EtkinlikClass(admin.ModelAdmin):
   verbose_name_plural = 'Etkinlikler'
 formfield_overrides = { models.TextField: {'widget': forms.Textarea(attrs={'class':'ckeditor'})}, }
-
+ 
 class Media:
     	js = ('ckeditor/ckeditor.js',) # The , at the end of this list IS important.
 
@@ -51,6 +51,7 @@ admin.site.register(User_Liked_Videos)
 admin.site.register(User_Events)
 admin.site.register(Event_Stream_Informations)
 admin.site.register(User_Playlist)
+admin.site.register(User_Subscriptions)
 admin.site.register(Playlist_Videos)
 admin.site.register(Messages,MesajClass)
 admin.site.register(Videos,VideoClass)

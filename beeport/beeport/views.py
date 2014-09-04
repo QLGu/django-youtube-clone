@@ -137,7 +137,7 @@ def ondemand_izleme_sayfasi(request,video_id):
     video_publisher=video_data[0].publisher
     video_like_count=User_Liked_Videos.objects.filter(video_id=video_id).count()
     video_comment_count=Video_Comments.objects.filter(video_id=video_id).count()
-    video_comments = Video_Comments.objects.filter(video_id=video_id)
+    video_comments = Video_Comments.objects.filter(video_id=video_id).order_by('-comment_date')
     related_videos = Videos.objects.filter(category=video_data[0].category)
     if request.POST:
         action_name = request.POST.get("action", "")
@@ -396,19 +396,31 @@ def sifre_sifirla(request):
         return render_to_response('reset.html',locals())
 
 def like(request):
-    vars = {}
-    if request.method == 'POST':
-        video_id = request.POST.get('slug', None)
-        video_obj = Videos.objects.get(pk=video_id)
-        user_id=request.session['user_id']
-        user_obj=User.objects.get(pk=user_id)
-        like_obj = User_Liked_Videos.objects.filter(video_id=video_obj, user_id=user_obj)
-        if like_obj.count() == 0:
-            obj = User_Liked_Videos(video_id=video_obj, user_id=user_obj)
-            obj.save()
+    cat_id = None
+    if request.method == 'GET':
+        video_id = request.GET['video_id']
+        likes=0
+        if video_id:
+            video_obj = Videos.objects.get(pk=video_id)
+            user_id=request.session['user_id']
+            user_obj=User.objects.get(pk=user_id)
+            like_obj = User_Liked_Videos.objects.filter(video_id=video_obj, user_id=user_obj)
+            if like_obj.count() == 0:
+                obj = User_Liked_Videos(video_id=video_obj, user_id=user_obj)
+                obj.save()
+                if video_obj:
+                    likes = video_obj.like_count + 1
+                    video_obj.like_count =  likes
+                    video_obj.save()
+            else:
+                obj = User_Liked_Videos.objects.get(video_id=video_obj, user_id=user_obj)
+                obj.delete()
+                if video_obj:
+                    likes = video_obj.like_count - 1
+                    video_obj.like_count =  likes
+                    video_obj.save()
 
-    return HttpResponse(simplejson.dumps(vars),
-                    mimetype='application/javascript')
+    return HttpResponse(likes)
 
 def comment(request):
     vars = {}
@@ -418,12 +430,13 @@ def comment(request):
         video_obj = Videos.objects.get(pk=video_id)
         user_id=request.session['user_id']
         user_obj=User.objects.get(pk=user_id)
-        #com_obj = Video_Comments.objects.filter(video_id=video_obj, commenter_id=user_obj)
-        #if com_obj.count() == 0:
+        comments = video_obj.comment_count
+        video_obj.comment_count =  comments + 1
+        video_obj.save()
         obj = Video_Comments(video_id=video_obj, commenter_id=user_obj,comment=comment)
         obj.save()
 
-    return HttpResponse(simplejson.dumps(vars),
+    return HttpResponse(json.dumps(vars),
                     mimetype='application/javascript')
 
 def new_list(request):
@@ -435,22 +448,22 @@ def new_list(request):
         obj = User_Playlist(user_id=user_obj, playlist_name=list_name)
         obj.save()
 
-    return HttpResponse(simplejson.dumps(vars),
+    return HttpResponse(json.dumps(vars),
                     mimetype='application/javascript')
 
 def follow(request):
     vars = {}
-    if request.method == 'POST':
-        video_id = request.POST.get('slug', None)
+    if request.method == 'GET':
+        video_id = request.GET['slug']
         video_obj = Videos.objects.get(pk=video_id)
         user_id=request.session['user_id']
         liker_obj=User.objects.get(pk=user_id)
-        liked_obj=User.objects.get(pk=video_obj.publisher)
+        liked_obj=User.objects.get(pk=video_obj.publisher.id)
         fol_obj = User_Subscriptions.objects.filter(liker_id=liker_obj, liked_id=liked_obj)
         if fol_obj.count() == 0:
             obj = User_Subscriptions(liker_id=liker_obj, liked_id=liked_obj)
             obj.save()
-    return HttpResponse(simplejson.dumps(vars),
+    return HttpResponse(json.dumps(vars),
                         mimetype='application/javascript')
 
 
@@ -483,3 +496,31 @@ def video_sil(request,video_id):
     obj = Videos.objects.get(id=video_id)
     obj.delete()
     return HttpResponseRedirect('/manager/')
+
+def coklu_listeye_ekle(request):
+    print "Mert"
+    return HttpResponse(likes)
+
+def coklu_tag_ekle(request):
+    print "Mert"
+    return HttpResponse(likes)
+
+def coklu_kategori_degistir(request):
+    print "Mert"
+    return HttpResponse(likes)
+
+def coklu_sil(request):
+    print "Mert"
+    return HttpResponse(likes)
+
+def coklu_public(request):
+    print "Mert"
+    return HttpResponse(likes)
+
+def coklu_url_public(request):
+    print "Mert"
+    return HttpResponse(likes)
+
+def coklu_private(request):
+    print "Mert"
+    return HttpResponse(likes)
