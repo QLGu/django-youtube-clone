@@ -101,6 +101,63 @@
   </div>
 </div>
 
+
+ <div id="add_to_list" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Liste sec</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form role="form">
+              <div class="form-group">
+                <label for="name">Liste Seciniz:</label>
+                <!-- <input type="text" class="form-control" id="title" name="listname"> -->
+                <select id="list" class="form-control">
+                    {% for list in lists %}
+                    <option value="{{list.id}}">{{list.playlist_name}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="addto_list" class="btn btn-primary">Kaydet</button>
+        </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+
+<div id="addtag" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Liste sec</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form role="form">
+              <div class="form-group">
+                <label for="name">Etiket Ekleyiniz:</label>
+                <!-- <input type="text" class="form-control" id="title" name="listname"> -->
+                <input class="form-control" type="text" placeholder="enter tag" id="tags">
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="addtags" class="form-control btn btn-primary">Kaydet</button>
+          <p align="left"><small>Not:Bir videoya en fazla 6 adet etiket girilebilir. "," ile ayırarak çoklu etiket bilgisi girebilirsiniz.</small></p>
+        </div>
+            </form>
+    </div>
+  </div>
+</div>
+
 <script type="text/javascript">
 $("#all_input").click(function(){
     if (this.checked == false){
@@ -122,10 +179,11 @@ $('.videos').click(function(){
 $("#update_cat1").click(function(){
     var sThisVal = [];
     $('input:checkbox.videos').each(function () {
-       sThisVal.push((this.checked ? $(this).val() : ""));
+       if(this.checked)
+            sThisVal.push($(this).val());
     });
     if (sThisVal.join(',') == ',')
-        alert("No");
+        console.log();
     else
         {
             //alert($("#category option:selected").val());
@@ -148,7 +206,194 @@ $("#update_cat1").click(function(){
    return false;
 });
 
+$("#addto_list").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+       if(this.checked)
+            sThisVal.push($(this).val());
+    });
+    if (sThisVal.join(',') == ',')
+        console.log();
+    else
+        {
+            //alert($("#category option:selected").val());
+            $.ajax({
+                 type: "POST",
+                 url: "{% url 'add-multi-list' %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}', 'list': $("#list option:selected").val()},
+                 
+                 dataType: "text",
+                 success: function(rs) {
+                     $("#add_to_list").modal('hide');
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
 
+$("#delmulti").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+       if(this.checked)
+            sThisVal.push($(this).val());
+    });
+    if (sThisVal.join(',') == ',')
+        console.log();
+    else
+        {
+            //alert($("#category option:selected").val());
+            $.ajax({
+                 type: "POST",
+                 url: "{% url 'coklu_sil' %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                 
+                 dataType: "text",
+                 success: function(rs) {
+                    $(".dropdown-menu").hide();
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
+
+
+$("#addtags").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+        if(this.checked)
+            sThisVal.push($(this).val());
+    });
+    if (sThisVal.join(',') == ',')
+        console.log();
+    else
+        {
+            //alert(sThisVal.join(','));
+            $.ajax({
+                 type: "POST",
+                 url: "{% url 'add-multi-tag' %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}', 'tags': $("#tags").val()},
+                 
+                 dataType: "text",
+                 success: function(rs) {
+                    $("#addtag").modal('hide');
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
+
+$("#multipublic").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+       if(this.checked)
+            sThisVal.push($(this).val());
+    });
+    if (sThisVal.join(',') == ',')
+        console.log();
+    else
+        {
+            //alert($("#category option:selected").val());
+            $.ajax({
+                 type: "POST",
+                 url: "{% url 'make-multi-public' %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                 
+                 dataType: "text",
+                 success: function(rs) {
+                    $(".dropdown-menu").hide();
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
+
+
+$("#multiurl").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+       if(this.checked)
+            sThisVal.push($(this).val());
+    });
+    if (sThisVal.join(',') == ',')
+        console.log();
+    else
+        {
+            //alert($("#category option:selected").val());
+            $.ajax({
+                 type: "POST",
+                 url: "{% url 'make-multi-owner-public' %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                 
+                 dataType: "text",
+                 success: function(rs) {
+                    $(".dropdown-menu").hide();
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
+
+
+$("#multiprivate").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+       if(this.checked)
+            sThisVal.push($(this).val());
+    });
+    if (sThisVal.join(',') == ',')
+        console.log();
+    else
+        {
+            //alert($("#category option:selected").val());
+            $.ajax({
+                 type: "POST",
+                 url: "{% url 'make-multi-private' %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}'},
+                 
+                 dataType: "text",
+                 success: function(rs) {
+                    $(".dropdown-menu").hide();
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
     
 </script>
 

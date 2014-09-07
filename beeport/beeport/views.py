@@ -218,6 +218,7 @@ def arama(request):
 def video_yoneticisi(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
+    lists = User_Playlist.objects.filter(user_id=request.user)
     my_videos = Videos.objects.filter(publisher=request.session['user_id'])
     video_count=my_videos.count()
     if request.POST:
@@ -550,12 +551,57 @@ def liste_sil(request,list_id):
         return HttpResponseRedirect('/lists/')
 
 def coklu_listeye_ekle(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            _list = request.POST.get("list");
+            print _list
+            _list = User_Playlist.objects.get(pk=_list)
+            vids = Videos.objects.filter(id__in=ids)
+            for vid in vids:
+                try:
+                    obj = Playlist_Videos.objects.create(video_id=vid, playlist_id=_list)
+                except:
+                    pass
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
+    else:
+        return render_to_response('manager.html',locals())
 
 def coklu_tag_ekle(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+            tags = request.POST.get("tags", None);
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            vids = Videos.objects.filter(id__in=ids)
+            for vid in vids:
+                vid.tags = vid.tags + ',' + tags
+                vid.save()
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
+    return render_to_response('manager.html',locals())
+
 
 def coklu_kategori_degistir(request):
     if request.method == "POST":
@@ -593,22 +639,78 @@ def coklu_sil(request):
             except:
                 ids = [int(i) for i in ids[1:].split(',')];
             print ids
-            cat = request.POST.get("category");
-            category = Categories.objects.get(id=cat)
             vids = Videos.objects.filter(id__in=ids)
             vids.delete();
             return render_to_response('manager.html', locals()) 
         else:
             return render_to_response('manager.html',locals())
+    return render_to_response('manager.html',locals())
 
 def coklu_public(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+            tags = request.POST.get("tags", None);
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            vids = Videos.objects.filter(id__in=ids)
+            for vid in vids:
+                vid.sharing_permissions = 1
+                vid.save()
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
+    return render_to_response('manager.html',locals())
 
 def coklu_url_public(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+            tags = request.POST.get("tags", None);
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            vids = Videos.objects.filter(id__in=ids)
+            for vid in vids:
+                vid.sharing_permissions = 2
+                vid.save()
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
+    return render_to_response('manager.html',locals())
 
 def coklu_private(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+            tags = request.POST.get("tags", None);
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            vids = Videos.objects.filter(id__in=ids)
+            for vid in vids:
+                vid.sharing_permissions = 3
+                vid.save()
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
+    return render_to_response('manager.html',locals())

@@ -51,8 +51,10 @@ urlpatterns = patterns('',
     url(r'^comment/$', views.comment, name="comment"),
     url(r'^follow/$', views.follow, name="follow"),
     url(r'^nplaylist/$', views.new_list, name='newlist'),
-    url(r'^/add-multi-list/$',views.coklu_listeye_ekle, name="add-multi-list"),
+    
+    url(r'^add-multi-list/$',views.coklu_listeye_ekle, name="add-multi-list"),    
     url(r'^/add-multi-tag/$',views.coklu_tag_ekle, name="add-multi-tag"),
+
     url(r'^/change-multi-cat/$',views.coklu_kategori_degistir, name="change-multi-cat"),
     url(r'^/delete-multi/$',views.coklu_sil, name="delete-multi"),
     url(r'^/make-multi-public/$',views.coklu_public, name="make-multi-public"),
