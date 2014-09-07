@@ -15,7 +15,7 @@
                     {% if recieved_messages.count > 0 %}
                     <table width="100%">
                         <tr>
-                            <th></th>
+                            <th>Islem</th>
                             <th>Gönderen</th>
                             <th>Mesaj</th>
                             <th>Tarih</th>
@@ -23,11 +23,11 @@
                         </tr>
                         {% for rcv in recieved_messages %}
                          <tr>
-                            <td></td>
+                            <td><span class="glyphicon glyphicon-remove"></span><span class="glyphicon glyphicon-eye-open"></span></td>
                             <td>{{ rcv.sender_id }}</td>
                             <td>{{ rcv.message }}</td>
                             <td>{{ rcv.sent_date }}</td>
-                            <td></td>
+                            
                         </tr>
                         {% endfor %}    
                         {% else %}
@@ -85,6 +85,7 @@
         jQuery(document).ready(function ($) {
             $('#tabs').tab();
         });
+
         </script>    
     </div> <!-- container -->
     {% include "footer.html" %}

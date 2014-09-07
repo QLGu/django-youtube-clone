@@ -3,7 +3,7 @@
     	<h3 align="left">Videolarım<span>({{ video_count }})</span></h3>
     	<table class="table table-striped table-bordered" cellspacing="0" width="100%">
     		<tr>
-    			<th><input type="checkbox"></th>
+    			<th><input id="all_input" type="checkbox"></th>
     			<th>
     				<!-- Small button group -->
     				<div class="btn-group">
@@ -11,13 +11,13 @@
     						Eylemler <span class="caret"></span>
     					</button>
     					<ul class="dropdown-menu" role="menu">
-    						<li><a href="#" id="addlist">Listeye Ekle</a></li>
-    						<li><a href="#" id="addtag">Etiket Ekle</a></li>
-    						<li><a href="#" id="changecat">Kategori Değiştir</a></li>
-    						<li><a href="#" id="delmulti">Sil</a></li>
-    						<li><a href="#" id="multipublic">Herkese Açık Yap</a></li>
-    						<li><a href="#" id="multiurl">Linke Sahip Herkese Açık Yap</a></li>
-    						<li><a href="#" id="multiprivate">Bana Özel Yap</a></li>
+    						<li><a href="#add_to_list" data-toggle="modal" id="addlist">Listeye Ekle</a></li>
+    						<li><a href="#addtag" data-toggle="modal" id="add_tag">Etiket Ekle</a></li>
+    						<li><a href="#update_cat" data-toggle="modal">Kategori Değiştir</a></li>
+    						<li><a href="#delmulti" id="delmulti">Sil</a></li>
+    						<li><a href="#multipublic" id="multipublic">Herkese Açık Yap</a></li>
+    						<li><a href="#multiurl" id="multiurl">Linke Sahip Herkese Açık Yap</a></li>
+    						<li><a href="#multiprivate" id="multiprivate">Bana Özel Yap</a></li>
     					</ul>
     				</div>
     			</th>
@@ -35,7 +35,7 @@
             {% for video in my_videos %}
     		<tr>
     			<td>
-                    <input type="checkbox" value="{{ video.id }}">
+                    <input type="checkbox" name="videos" class="videos" value="{{ video.id }}">
                 </td>
     			<td><img src="/uploads/{{ video.video_image }}" width="100" height="100" />
     			</td>
@@ -68,5 +68,89 @@
             {% endfor %}
     	</table>
     </div>
+
+
+
+    <!-- modals -->
+    <div id="update_cat" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Kategory sec</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form role="form">
+              <div class="form-group">
+                <label for="name">Kategory Seciniz:</label>
+                <!-- <input type="text" class="form-control" id="title" name="listname"> -->
+                <select id="category" class="form-control">
+                    {% for c in kategoriler %}
+                    <option value="{{c.id}}">{{c.name}}</option>
+                    {% endfor %}
+                </select>
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="update_cat1" class="btn btn-primary">Kaydet</button>
+        </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+$("#all_input").click(function(){
+    if (this.checked == false){
+        $('input:checkbox.videos').each(function () {
+        this.checked = false;
+        });      
+    }
+    else{
+    $('input:checkbox.videos').each(function () {
+    this.checked = true;
+    });  
+    }
+});
+
+
+$('.videos').click(function(){
+    // customize
+});
+$("#update_cat1").click(function(){
+    var sThisVal = [];
+    $('input:checkbox.videos').each(function () {
+       sThisVal.push((this.checked ? $(this).val() : ""));
+    });
+    if (sThisVal.join(',') == ',')
+        alert("No");
+    else
+        {
+            //alert($("#category option:selected").val());
+            $.ajax({
+                 type: "POST",
+                 url: "{% url "coklu_kategori_degistir" %}",
+                 data: {'ids': sThisVal.join(','), 'csrfmiddlewaretoken': '{{csrf_token}}', 'category': $("#category option:selected").val()},
+                 dataType: "text",
+                 success: function(rs) {
+                     $("#update_cat").modal('hide');
+                     $("input:checkbox").each(function(){
+                        this.checked = false;
+                     });
+                  },
+                  error: function(rs, e) {
+                        alert(rs.responseText);
+                  }
+            });
+        }
+   return false;
+});
+
+
+    
+</script>
+
     <script src="/template/static/js/manager.js"></script>
     {% include "footer.html" %}

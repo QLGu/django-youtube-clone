@@ -1,6 +1,7 @@
     {% include "header.html" %}
+    {% load url from future %}
     <div class="container">
-    	<table class="table table-striped table-bordered" cellspacing="0" width="100%">
+    	<table id="video-lists" class="table table-striped table-bordered" cellspacing="0" width="100%">
             <tr>
                 <th><h3>Listelerim({{ my_lists.count }})</h3></th>
                 <th>
@@ -22,11 +23,17 @@
                     <a href="/watch/?list={{ list.id }}">Oynat</a>
                     <a href="/edit_list/{{ list.id }}">Düzenle</a>
                     <a href="/share_list/{{ list.id }}">Paylaş</a>
-                    <a href="/del_list/{{ list.id }}">Sil</a>
+                   <!--  <a href="/del_list/{{ list.id }}">Sil</a> -->
+                   <a href="{% url 'del_list' list.id %}" onclick="return confirmDelete();">Sil</a>
                 </td>
             </tr>
             {% endfor %}
         </table><br>
         <img src="/template/static/images/list2.png"><br>
+        <script type="text/javascript">
+             function confirmDelete() {
+                return confirm("Bu listeyi kalıcı olarak silmek istediğinizden emin misiniz?");
+            }
+        </script>
     </div>
     {% include "footer.html" %}

@@ -55,6 +55,7 @@
          <hr>
          <!-- Posted Comments -->
          <h4>Yorumlar:</h4>
+         <div id="comments" class="container">
          {% if video_comment_count > 0 %}
          {% for comment in video_comments %}
          <!-- Comment -->
@@ -70,14 +71,16 @@
            </div>
          </div>
          {% endfor %}
+
          {% else %}
          <p>Bu videoya daha önce hiç yorum yapılmadı.İlk yorumlayan sen ol!</p>
          {% endif %}
+         </div>
            <hr>
            <!-- Comments Form -->
            <div class="well">
              <h4>Leave a Comment:</h4>
-             <form role="form">
+             <form >
               {% csrf_token %}
                <div class="form-group">
                  <textarea class="form-control" id="textcom" rows="3"></textarea>

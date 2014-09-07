@@ -15,6 +15,8 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import pafy
+from django.template import RequestContext
+from django.core import serializers
 
 def makePayment(request):
     token = uuid.uuid4().hex
@@ -24,8 +26,8 @@ def makePayment(request):
 def sendMessage(request):
     kime = request.POST.get("kime", "")
     mesaj = request.POST.get("mesaj", "")
-    user= User.objects.get(profile_name=kime)
-    sender= User.objects.get(pk=1)
+    user= User.objects.get(username=kime)
+    sender= request.user
     obj = Messages(sender_id=sender, reciever_id=user, message=mesaj,status=2)
     obj.save()
 
@@ -227,6 +229,7 @@ def listelerim(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     my_lists = User_Playlist.objects.filter(user_id=request.session['user_id'])
+
     if request.POST:
         return render_to_response('lists.html',locals())
     else:
@@ -235,7 +238,7 @@ def listelerim(request):
 def bilgilerimi_guncelle(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
-    user = User.objects.get(pk=request.session['user_id'])
+    user = UserProfile.objects.get(user__id=request.user.id)
     if request.POST:
         form = ProfileForm(request.POST,instance=user)
         if form.is_valid():
@@ -325,17 +328,35 @@ def sifre_degistir(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
-        return render_to_response('rss.html',locals())
+        user = request.user
+        old_p = request.POST.get("old_password", None);
+        new_p1 = request.POST.get("new_password1", None);
+        new_p2 = request.POST.get("new_password2", None);
+        if new_p1 == new_p2:
+            if user.check_password(old_p):
+                user.set_password(new_p1)
+                user.save()
+                return HttpResponseRedirect('/sign_out')        
+            else:
+                pass
+        else:
+            pass
+        return HttpResponseRedirect('/')
     else:
-        return render_to_response('rss.html',locals())
+        return render_to_response('reset.html',locals())
 
 def mail_degistir(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
-        return render_to_response('rss.html',locals())
+        user = request.user
+        email = request.POST.get("email", None)
+        user.email = email
+        user.save()
+        return HttpResponseRedirect('/')
     else:
-        return render_to_response('rss.html',locals())
+        locals()["user"] = request.user
+        return render_to_response('change_email.html',locals())
 
 def gizlilik(request):
     csrf_token = get_or_create_csrf_token(request)
@@ -447,7 +468,9 @@ def new_list(request):
         user_obj=User.objects.get(pk=user_id)
         obj = User_Playlist(user_id=user_obj, playlist_name=list_name)
         obj.save()
-
+        vars = serializers.serialize('json', [ obj, ])
+        return HttpResponse(vars,   
+                    mimetype='application/json')
     return HttpResponse(json.dumps(vars),
                     mimetype='application/javascript')
 
@@ -471,10 +494,15 @@ def video_ekle(request):
     csrf_token = get_or_create_csrf_token(request)
     kategoriler = Categories.objects.all()
     if request.POST:
-        form = AddVideoForm(request.POST,request.FILES)
+        form = AddVideoForm(request.POST,request.FILES,)
+
         if form.is_valid():
-            form.save()
-        return render_to_response('ekle.html',locals()) 
+            instance = form.save(commit=False)
+            instance.publisher = request.user
+            instance.save()
+            locals()["success"] = True
+            print locals()["success"]
+        return render_to_response('ekle.html', locals()) 
     else:
         form = AddVideoForm()
         return render_to_response('ekle.html',locals())
@@ -487,15 +515,39 @@ def video_duzenle(request,video_id):
         form = AddVideoForm(request.POST,instance=video)
         if form.is_valid():
             form.save()
+            locals()["success"] = True
         return render_to_response('ekle.html',locals()) 
     else:
         form = AddVideoForm(instance=video)
         return render_to_response('ekle.html',locals())
 
+def liste_duzenle(request,list_id):
+    if request.method == "POST":
+        list_id = request.POST.get("list_id", None)
+        list_name = request.POST.get("list_name", None)
+        liste = User_Playlist.objects.get(pk=list_id)
+        liste.playlist_name = list_name
+        liste.save()
+        return HttpResponseRedirect('/lists/')
+    else:        
+        context = RequestContext(request)
+        csrf_token = get_or_create_csrf_token(request)
+        liste = User_Playlist.objects.get(pk=list_id)
+        list_videos = Playlist_Videos.objects.filter(playlist_id=list_id)
+        return render_to_response("edit_list.html",{ "list" : liste,"videos":list_videos},context)
+
 def video_sil(request,video_id):
     obj = Videos.objects.get(id=video_id)
     obj.delete()
     return HttpResponseRedirect('/manager/')
+
+def liste_sil(request,list_id):
+    if request.user.id == request.session['user_id']:
+        obj = User_Playlist.objects.get(id=list_id)
+        obj.delete()
+        return HttpResponseRedirect('/lists/')
+    else:
+        return HttpResponseRedirect('/lists/')
 
 def coklu_listeye_ekle(request):
     print "Mert"
@@ -506,12 +558,48 @@ def coklu_tag_ekle(request):
     return HttpResponse(likes)
 
 def coklu_kategori_degistir(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            cat = request.POST.get("category");
+            category = Categories.objects.get(id=cat)
+            vids = Videos.objects.filter(id__in=ids)
+            for vid in vids:
+                vid.category = category
+                vid.save()
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
 
 def coklu_sil(request):
-    print "Mert"
-    return HttpResponse(likes)
+    if request.method == "POST":
+        csrf_token = get_or_create_csrf_token(request)
+        if request.POST:
+            ids = request.POST.get("ids", None);
+            try:
+                try:
+                    ids = [int(i) for i in ids.split(',')];
+                except:
+                    ids = [int(i) for i in ids[:-1].split(',')];
+            except:
+                ids = [int(i) for i in ids[1:].split(',')];
+            print ids
+            cat = request.POST.get("category");
+            category = Categories.objects.get(id=cat)
+            vids = Videos.objects.filter(id__in=ids)
+            vids.delete();
+            return render_to_response('manager.html', locals()) 
+        else:
+            return render_to_response('manager.html',locals())
 
 def coklu_public(request):
     print "Mert"

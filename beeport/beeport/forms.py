@@ -21,6 +21,69 @@ class ProfileForm(forms.ModelForm):
 		exclude=('user',)
 
 class AddVideoForm(forms.ModelForm):
+	class Meta:
+		model = Videos
+		exclude = ['path_720p', 'path_480p', 'path_360p', 'path_240p', 'publisher', \
+		'upload_date', 'like_count', 'comment_count', 'watch_count', 'video_duration']
+
+	def __init__(self, *args, **kwargs):
+		super(AddVideoForm, self).__init__(*args, **kwargs)
+		self.fields['category'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+		)
+
+		self.fields['name'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+		)
+
+		self.fields['resource'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+		)
+
+		self.fields['sharing_permissions'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+		)
+
+		self.fields['path'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+			)
+		self.fields['video_image'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+			)
+		self.fields['desc'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+			)
+		self.fields['tags'].widget.attrs.update(
+			{
+			'class': "form-control",
+			'style': "margin:10px;",
+			}
+
+		)
+
+
+	"""
 	CHOICES= (
 	(1, 'Herkese Açık'),
 	(2, 'Video Linkine Sahip Olan Herkese Açık'),
@@ -43,3 +106,4 @@ class AddVideoForm(forms.ModelForm):
 	    if commit:
 	        m.save()
 	    return m
+	"""

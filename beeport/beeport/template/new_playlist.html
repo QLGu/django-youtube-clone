@@ -1,39 +1,96 @@
-<div id="new" class="modal fade" data-backdrop="static">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title">Yeni Playlist</h4>
-            </div>
-            <div class="modal-body">
-              <div>
-                <form role="form">
-                 <div class="form-group">
-                  <label for="name">Playlist Adı Giriniz:</label>
-                  <input type="text" class="form-control" id="title" name="listname">
-                </div>
+
+  <div id="new" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Yeni Playlist</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form role="form">
+              <div class="form-group">
+                <label for="name">Playlist Adı Giriniz:</label>
+                <input type="text" class="form-control" id="title" name="listname">
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" id="nplaylist"class="btn btn-primary">Kaydet</button>
-            <script>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="nplaylist"class="btn btn-primary">Kaydet</button>
+        </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+<div id="add_to_list" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Yeni Playlist</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form role="form">
+              <div class="form-group">
+                <label for="name">Playlist Adı Giriniz:</label>
+                <input type="text" class="form-control" id="title" name="listname">
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="nplaylist"class="btn btn-primary">Kaydet</button>
+        </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+<div id="addtag" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Yeni Playlist</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form role="form">
+              <div class="form-group">
+                <label for="name">Playlist Adı Giriniz:</label>
+                <input type="text" class="form-control" id="title" name="listname">
+              </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="nplaylist"class="btn btn-primary">Kaydet</button>
+        </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
             $('#nplaylist').click(function(){
             $.ajax({
                      type: "POST",
                      url: "{% url "newlist" %}",
                      data: {'name': $('#title').val(), 'csrfmiddlewaretoken': '{{csrf_token}}'},
                      dataType: "text",
-                     success: function(response) {
-                            //alert('You liked this')
+                     success: function(rs) {
+                            $("#new").modal('hide');
+                            var obj = jQuery.parseJSON(rs);
+                            $("#video-lists").append('<tr><td>' + $('#title').val() + '</td><td><a href="/watch/?list={{ ' + obj[0]["pk"] + ' }}">Oynat</a> <a href="/edit_list/{{ ' + obj[0]["pk"] + ' }}">Düzenle</a> <a href="/share_list/{{ ' + obj[0]["pk"] + ' }}">Paylaş</a> <a href="{% url "del_list" ' + obj[0]["pk"] + ' %}" onclick="return confirmDelete();">Sil</a></td></tr>');
+
                       },
                       error: function(rs, e) {
                             alert(rs.responseText);
                       }
-                }); 
-           })
+                });
+                return false; 
+           });
           </script>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>

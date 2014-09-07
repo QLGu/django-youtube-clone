@@ -1,10 +1,12 @@
     {% include "header.html" %}
+
     <div class="container">
     	<div id="content">
     	    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
     	        <li class="active"><a href="#from" data-toggle="tab">Bilgisayarımdan Yükle</a></li>
     	        <li><a href="#to" data-toggle="tab">İnternetteki Bir Konumdan Yükle</a></li>
     	    </ul>
+
     	    <div id="my-tab-content" class="tab-content">
     	        <div class="tab-pane active" id="from">
 
@@ -14,7 +16,12 @@
     	        </div>
     	    </div>
             <br>
-            <form method="post">
+
+            <div class="container" id="from">
+            {% if success %}
+            <h2>success</h2>
+            {% else %}
+            <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <table>
                 {% for field in form %}
@@ -27,6 +34,12 @@
                 </table>
                 <input type="submit" value="Submit" />
             </form>
+            {% endif %}
+            </div>
+
+            <div class="container" id="tab2">
+            </div>
+            
     </div>
     {% include "footer.html" %}
     

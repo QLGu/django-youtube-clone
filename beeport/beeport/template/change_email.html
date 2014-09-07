@@ -1,0 +1,16 @@
+{% include "header.html" %}
+<div class="container">
+	<h1 align="center">Change Email </h1>
+	<div class="row">
+		<div class="col-sm-6 col-sm-offset-3">
+		<form method="post" id="emailForm" action="#">
+				{% csrf_token %}
+				<input type="email" value="{{user.email}}" class="input-lg form-control" name="email" id="email" placeholder="E-Mail Adresinizi Giriniz" autocomplete="off">
+				
+				<br>
+				<input type="submit" class="col-xs-12 btn btn-primary btn-load btn-lg" value="Tamamla">
+			</form>
+		</div><!--/col-sm-6-->
+	</div><!--/row-->
+</div>
+{% include "footer.html" %}

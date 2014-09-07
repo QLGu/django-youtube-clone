@@ -1,0 +1,25 @@
+    {% include "header.html" %}
+
+    <div class="container">
+    	<div id="content">
+    	    
+            <h2>edit list {{list.playlist_name}}</h2>
+
+            <form method="post" action="#" class="form-group">
+            {% csrf_token %}
+            <input class="form-control input-md" name="list_name" type="text" value="{{list.playlist_name}}" />
+            <input type="hidden" value="{{list.id}}" name="list_id">
+            <br><hr><br>
+            <ul>
+            <li>video1 <a class="pull-right" onclick="alert();"><span class="glyphicon glyphicon-remove"></span></a></li>
+            {% for video in videos %}
+                <li>{{video.video_id}}<span class="glyphicon glyphicon-remove"></span></li>
+            {% endfor %}
+            </ul>
+            <input type="submit" value="Gonder" class="btn btn-primary">
+            </form>
+
+            
+    </div>
+    {% include "footer.html" %}
+    

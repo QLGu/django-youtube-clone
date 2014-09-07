@@ -14,7 +14,7 @@ class UserProfile(models.Model):
     country=models.CharField(max_length=255)
     city=models.CharField(max_length=255)
     social_type = models.IntegerField(default=0,choices=[(0,'No Social Media'),(1,'Facebook'),(2,'Twitter'),(3,'Google')])
-
+    
     def __unicode__(self):
         return self.user.username
 
@@ -51,7 +51,7 @@ class Videos(models.Model):
     publisher=models.ForeignKey(User)
     sharing_permissions=models.IntegerField(max_length=255,choices=[(1,'Herkese Açık'),(2,'Video Linkine Sahip Olan Herkese Açık'),(3,'Sadece Bana Açık')])
     video_image=models.ImageField(upload_to="image/%Y/%m/%d")
-    desc=models.TextField()
+    desc=models.TextField(null=True, blank=True)
     upload_date=models.DateTimeField(auto_now=True,default=datetime.now())
     tags = models.CharField(max_length=255)
     like_count=models.IntegerField(default=0)
